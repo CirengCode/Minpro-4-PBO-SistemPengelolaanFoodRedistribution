@@ -35,7 +35,9 @@ Program ini disusun dengan kosep **MVC (Model–View–Controller)** yang dimodi
 
 | Package | Fungsi | Isi |
 |---|---|---|
+| `config` | Package ini digunakan untuk mengatur dan menguji koneksi database. Package ini memiliki class `Koneksi.java` yang menyediakan method untuk mendapatkan koneksi ke database MySQL, serta class `TesKoneksi.java` yang memastikan koneksi dapat dilakukan sebelum seluruh program dijalankan.  | `Koneksi`, `TesKoneksi` |
 | `main` |Package ini menjadi titik awal program. Di dalamnya terdapat class utama yang menjalankan program dengan membuat MenuController dan memulai alur sistem. | `SistemPengelolaanFoodRedistributionMain.java` |
+| `dao` | Package ini berisi class `DonaturDAO`, `DonasiDAO`, `PenerimaDAO`, dan `PenyaluranDAO`. DAO (_Data Access Object_) bertugas untuk menangani interaksi antara program Java dan database melalui JDBC. Operasi seperti SELECT, INSERT, UPDATE, dan DELETE ada di package ini agar akses data terpisah dari logika bisnis di `Service`.  | `DonaturDao`, `DonasiDao`, `PenerimaDao`, `PenyaluranDao` |
 | `model` | Berisi class yang merepresentasikan data atau objek yang digunakan dalam sistem. Class di dalamnya menyimpan atribut, constructor, getter, setter, dan juga menerapkan konsep OOP seperti inheritance. | `Donatur`, `DonaturIndividu`, `DonaturInstansi`, `Penerima`, `PenerimaIndividu`, `PenerimaLembaga`, `Donasi`, `Penyaluran` |
 | `service` | Package ini berisi class yang menangani proses dan logika pengelolaan data. Package ini menjalankan operasi CRUD dan proses lain yang berkaitan dengan data. | `DonaturService`, `DonasiService`, `PenerimaService`, `PenyaluranService`, `PetugasService` |
 | `controller` | Package ini mengatur alur penggunaan program dan menentukan proses atau menu yang bisa dijalankan sesuai peran pengguna. Controller menghubungkan pilihan pengguna ke service yang tepat. | `MenuController`, `AdminController`, `PetugasController` |
@@ -731,7 +733,7 @@ Program membedakan donatur menjadi `Donatur Individu` dan `Donatur Instansi`. Do
 
 
 <br> **5. Menambah Data Donatur Baru**
-<br> Ketika Admin memilih menu Donatur dan menambah data, program akan membuat ID Donatur secara otomatis, sehingga pengguna tidak perlu memasukkan ID secara manual. Setelah itu, Admin akan mengisi nama donatur dan memilih jenis donatur, apakah `individu` atau `instansi`. Jika memilih Individu, sistem meminta `Jenis Kegiatan`, sedangkan jika memilih Instansi, sistem meminta `Nama Instansi` dan `Jenis Instansi`. Setelah semua data diisi, program membuat objek sesuai jenis yang dipilih dan menyimpannya ke dalam `ArrayList<Donatur>`. Proses ini menunjukkan penggunaan _inheritance_ karena satu tipe data induk bisa menampung beberapa objek class turunan dengan karakteristik berbeda.
+<br> Ketika Admin memilih menu Donatur dan menambah data, program akan membuat ID Donatur secara otomatis, sehingga pengguna tidak perlu memasukkan ID secara manual. Setelah itu, Admin akan mengisi nama donatur dan memilih jenis donatur, apakah `individu` atau `instansi`. Jika memilih Individu, sistem meminta `Jenis Kegiatan`, sedangkan jika memilih Instansi, sistem meminta `Nama Instansi` dan `Jenis Instansi`. Objek tersebut kemudian diteruskan ke `DonaturDAO` untuk disimpan ke tabel donatur pada database MySQL menggunakan JDBC. Proses ini menunjukkan penggunaan _inheritance_ karena `DonaturIndividu` dan `DonaturInstansi` merupakan turunan dari `Donatur`. Kedua objek ini tetap dapat dikelola dengan tipe data induk `Donatur,` dan datanya disimpan secara permanen di database.
 
 <img width="472" height="643" alt="image" src="https://github.com/user-attachments/assets/7af33584-0534-4d17-97fa-04c05d43e4d3" />
 <br> <img width="443" height="297" alt="image" src="https://github.com/user-attachments/assets/f378c000-080c-4d68-a3ed-5f2925fbb308" />
@@ -746,7 +748,7 @@ Pada proses pengelolaan data, status kelayakan donasi bisa ditentukan saat prose
 
 
 <br> **7. Menu Data Penerima**
-<br> Menu Penerima digunakan untuk mengelola pihak yang akan menerima makanan hasil redistribusi. Ketika Admin menambah data, ID Penerima akan dibuat secara otomatis oleh sistem ketika data penerima baru ditambahkan. Pengguna tidak perlu memasukkan ID secara manual, sehingga setiap penerima langsung memiliki identitas dari sistem. Seperti Donatur, penerima dibedakan menjadi dua jenis, yaitu `Penerima Individu` dan `Penerima Lembaga`. Penerima Individu memiliki atribut tambahan `Deskripsi Penerima`, sedangkan Penerima Lembaga memiliki informasi seperti `Nama Lembaga`, `Jenis Lembaga`, dan `Nama Pengelola`. Kedua jenis ini adalah turunan dari class Penerima, sehingga bisa disimpan dalam satu `ArrayList<Penerima>`. 
+<br> Menu Penerima digunakan untuk mengelola pihak yang akan menerima makanan hasil redistribusi. Ketika Admin menambah data, ID Penerima akan dibuat secara otomatis oleh sistem ketika data penerima baru ditambahkan. Pengguna tidak perlu memasukkan ID secara manual, sehingga setiap penerima langsung memiliki identitas dari sistem. Seperti Donatur, penerima dibedakan menjadi dua jenis, yaitu `Penerima Individu` dan `Penerima Lembaga`. Setelah objek penerima dibuat, datanya diteruskan ke `PenerimaDAO` untuk disimpan ke tabel penerima pada database MySQL menggunakan JDBC. Dengan cara ini, konsep _inheritance_ tetap digunakan saat membuat objek, sementara DAO bertugas menyimpan data ke dalam database.
 
 <img width="525" height="822" alt="image" src="https://github.com/user-attachments/assets/69ff2a6a-9a82-4200-8ff8-4f2ac9c4fc9c" />
 
