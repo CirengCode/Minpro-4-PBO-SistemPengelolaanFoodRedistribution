@@ -490,6 +490,187 @@ Dengan demikian, superclass `Donatur` hanya menetapkan bahwa subclass harus puny
 Penggunaan abstraction pada Donatur membuat program bisa memisahkan karakteristik umum donatur dari detail khusus tiap jenis donatur. Donatur menjadi dasar, sedangkan DonaturIndividu dan DonaturInstansi memberikan implementasi yang lebih spesifik.
 
 ---
+## 📟 Integrasi Database dengan JDBC
+
+Pengembangan program Sistem Pengelolaan Food Redistribution dilakukan dengan mengintegrasikan program ke database menggunakan JDBC (Java Database Connectivity). Sebelumnya, data dikelola menggunakan `ArrayList`, sehingga data hanya tersimpan selama program berjalan. Setelah menerapkan JDBC, data dapat disimpan secara permanen di database dan tetap tersedia meskipun program ditutup lalu dijalankan kembali.
+
+JDBC adalah API standar Java yang digunakan untuk menghubungkan aplikasi Java ke database. Dengan JDBC, program dapat menjalankan perintah SQL untuk membaca, menambah, memperbarui, dan menghapus data. Pada program ini, digunakan MySQL sebagai DBMS dan DAO (Data Access Object) untuk memisahkan akses database dari logika bisnis.
+
+### 1. Membuat Database
+Database yang digunakan dalam program ini bernama `pengelolaan_food_redistribution_db`. Database ini menyimpan semua data yang dikelola oleh sistem, seperti data donatur, donasi, penerima, dan penyaluran.
+
+<br> <img width="843" height="386" alt="image" src="https://github.com/user-attachments/assets/6a3c36c3-0a45-4be6-a91d-5749ea00b08d" />
+
+Setiap entitas disimpan di tabel masing-masing dan saling terhubung melalui ID dan foreign key. Dengan cara ini, data yang dimasukkan melalui program akan tersimpan di database, bukan hanya di memori aplikasi.
+
+<br> <img width="715" height="238" alt="image" src="https://github.com/user-attachments/assets/99b1e11a-c84e-4720-ba3a-3284c43bc26b" />
+<br> <img width="945" height="218" alt="image" src="https://github.com/user-attachments/assets/fd2d3704-1ffb-4525-8be9-ba85251474b9" />
+<br> <img width="1088" height="210" alt="image" src="https://github.com/user-attachments/assets/9e00f011-3ce6-4b61-bea4-f0bcc6c177cf" />
+<br> <img width="1440" height="215" alt="image" src="https://github.com/user-attachments/assets/253a7405-39e4-4303-ab78-1e039c5ffc90" />
+
+### 2. Memasang Driver
+Agar Java bisa terhubung dengan MySQL, program memerlukan driver JDBC. Driver yang digunakan adalah**MySQL Connector/J**, yaitu driver resmi untuk menghubungkan aplikasi Java ke database MySQL.
+
+Driver ini ditambahkan sebagai dependensi di file `pom.xml`, sehingga library bisa dikelola bersama dependensi project lainnya.
+
+```
+...
+    <dependencies>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.3.0</version>
+        </dependency>
+    </dependencies>
+...
+
+```
+
+Pada konfigurasi diatas, `groupId` dan `artifactId` menunjukkan identitas library, sedangkan `version` menentukan versi driver yang digunakan. Setelah dependensi dikenali, program dapat menggunakan kelas JDBC untuk membuat koneksi dan menjalankan query ke database.
+
+### 3. Membuat Koneksi Database
+Konfigurasi koneksi ditempatkan pada package `config`, tepatnya di class `Koneksi.java. Dengan cara ini, pengaturan koneksi tidak perlu ditulis berulang kali di setiap class yang membutuhkan akses ke database.
+
+```java
+package config;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Koneksi {
+
+    private static final String URL = "jdbc:mysql://localhost:3306/pengelolaan_food_redistribution_db";
+    private static final String USER = "root";
+    private static final String PASS = "";
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASS);
+    }
+}
+```
+Konfigurasi diatas terdiri dari tiga bagian utama:
+* **URL** berisi alamat server MySQL, port yang digunakan, dan nama database tujuan. Pada program ini, MySQL diakses lewat `localhost` dengan port 3306.
+* **USER** adalah nama pengguna database yang digunakan untuk melakukan koneksi, yaitu `root`.
+* **PASS** berisi kata sandi pengguna database. Pada konfigurasi ini, nilainya dikosongkan.
+
+Method `getConnection()` menggunakan `DriverManager.getConnection()` untuk mendapatkan objek `Connection`. Objek ini menghubungkan program Java dengan database, sehingga perintah SQL bisa dijalankan lewat koneksi tersebut.
+
+Method ini juga mendeklarasikan `SQLException` untuk menangani kemungkinan gagal saat koneksi atau operasi database. Dengan begitu, kesalahan akses database bisa diteruskan ke bagian program yang bertanggung jawab.
+
+### 4. Membuat Pengujian Koneksi Database
+Sebelum JDBC digunakan dalam proses CRUD, koneksi database diuji melalui class `TesKoneksi.java`. Class ini ada di package `config` dan memiliki method `main()` sendiri, sehingga pengujian koneksi bisa dilakukan tanpa menjalankan seluruh program.
+
+```
+package config;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class TesKoneksi {
+
+    public static void main(String[] args) {
+        try (Connection conn = Koneksi.getConnection()) {
+
+            if (conn != null && !conn.isClosed()) {
+                System.out.println("--------------------------------");
+                System.out.println("Yay! Koneksi database berhasil ^^");
+                System.out.println("Database: " + conn.getCatalog());
+                System.out.println("--------------------------------");
+            } else {
+                System.out.println("Koneksi gagal :(");
+            }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Gagal memeriksa koneksi: " + e.getMessage()
+            );
+        }
+    }
+}
+```
+Pengujian dilakukan dengan memanggil `Koneksi.getConnection()`. Jika objek koneksi berhasil dan masih terbuka, program akan menampilkan pesan sukses beserta nama database yang digunakan. Jika ada kesalahan saat mengakses database, `SQLException` akan ditangkap dan pesan kesalahannya ditampilkan.
+
+Penggunaan try-with-resources memastikan objek `Connection` ditutup setelah pengujian selesai, bahkan jika terjadi kesalahan. Pengujian ini membantu memastikan konfigurasi database dan koneksi sudah benar sebelum aplikasi dijalankan sepenuhnya.
+
+### 5. Penerapan JDBC dengan DAO (*Data Access Object*)
+Setelah koneksi tersedia, JDBC diterapkan pada package `dao`. DAO adalah pola pemisahan akses data agar perintah SQL dan proses interaksi database tidak tercampur dengan logika bisnis program.
+
+| Class DAO | Fungsi |
+|---|---|
+| `DonaturDAO` | Mengakses data donatur. |
+| `DonasiDAO` | Mengakses data donasi. |
+| `PenerimaDAO` | Mengakses data penerima. |
+| `PenyaluranDAO` | Mengakses data penyaluran. |
+
+Keempat DAO menggunakan pola implementasi yang serupa. Penjelasan berikut akan menggunakan  `DonasiDAO.java` sebagai contoh penerapan JDBC.
+
+#### a. Menjalankan query menggunakan PreparedStatement
+**PreparedStatement** merupakan objek JDBC yang digunakan untuk menjalankan perintah SQL dengan parameter yang diisi lewat tanda tanya (`?`). Cara ini membuat query lebih terstruktur dan membantu mencegah SQL Injection karena input diperlakukan sebagai parameter, bukan digabungkan langsung ke teks SQL.
+
+```
+String sql = "INSERT INTO donasi "
+    + "(id_donasi, id_donatur, nama_makanan, "
+    + "jumlah_porsi, status_kelayakan) "
+    + "VALUES (?, ?, ?, ?, ?)";
+
+try (Connection conn = Koneksi.getConnection()) {
+    try (PreparedStatement pstmt =
+            conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, donasi.getIdDonasi());
+        pstmt.setString(2, donasi.getIdDonatur());
+        pstmt.setString(3, donasi.getNamaMakanan());
+        pstmt.setInt(4, donasi.getJumlahPorsi());
+        pstmt.setString(5, donasi.getStatusKelayakan());
+
+        return pstmt.executeUpdate() > 0;
+    }
+}
+```
+
+Pada contoh di atas, query `INSERT` disiapkan dengan lima parameter yang mewakili atribut data donasi. Nilai tiap parameter diisi menggunakan method setString() atau setInt() sesuai tipe datanya.
+
+Setelah semua parameter terisi, `executeUpdate()` akan menjalankan perintah penambahan data. Method ini mengembalikan jumlah baris yang terpengaruh. Karena itu, DAO mengembalikan `true` jika ada baris yang berhasil ditambahkan dan `false` jika tidak ada.
+
+Penggunaan try-with-resources juga memastikan objek Connection dan PreparedStatement ditutup setelah operasi selesai.
+
+#### b. Penerapan operasi CRUD
+Selain menambah data, `DonasiDAO` juga menyediakan metode untuk membaca, memperbarui, dan menghapus data. Setiap operasi ini menggunakan perintah SQL yang sesuai dengan fungsinya.
+
+| Operasi | Method DAO | Query | Fungsi |
+|---|---|---|---|
+| Create | `insert()` | `INSERT` | Menambahkan data donasi ke database. |
+| Read | `findAll()` | `SELECT` | Mengambil seluruh data donasi untuk ditampilkan. |
+| Read | `findById()` | `SELECT` dengan `WHERE` | Mencari satu data donasi berdasarkan ID. |
+| Update | `update()` | `UPDATE` | Memperbarui atribut data donasi berdasarkan ID. |
+| Delete | `delete()` | `DELETE` dengan `WHERE` | Menghapus data donasi berdasarkan ID. |
+
+Pada operasi pembacaan data, `executeQuery()` digunakan untuk menjalankan perintah `SELECT` dan menghasilkan objek `ResultSet`. Data hasil query dibaca dengan `rs.next()`, lalu setiap kolom dipetakan ke atribut objek `Donasi`. Pada method `findAll()`, semua objek yang didapat dikumpulkan ke dalam `List<Donasi>`, sedangkan `findById()` mengembalikan objek yang sesuai dengan ID yang dicari atau `null` jika data tidak ditemukan.
+
+Sementara itu, method `insert()`, `update()`, dan `delete()` menggunakan `executeUpdate()` karena semuanya mengubah data di database. Untuk `update()` dan `delete()`, parameter ID digunakan pada klausa `WHERE` agar perubahan atau penghapusan hanya terjadi pada data yang benar.
+
+Pola yang sama juga digunakan pada `DonaturDAO`, `PenerimaDAO`, dan `PenyaluranDAO`, dengan penyesuaian pada tabel, atribut, dan objek model yang dikelola oleh masing-masing DAO.
+
+#### c. Hubungan DAO dengan Service
+DAO tidak bertanggung jawab atas seluruh alur program. Tugas utama DAO adalah menjalankan query dan mengelola pertukaran data antara aplikasi dan database. Sementara itu, aturan bisnis dan pengelolaan data diatur oleh package `service`.
+
+Sebagai contoh, `DonasiService` akan memanggil `DonasiDAO` untuk membaca atau menyimpan data donasi. Sebelum data diproses, Service dapat melakukan validasi, misalnya memeriksa apakah ID donatur ada dan memastikan input sudah sesuai dengan aturan program. Setelah validasi, DAO menjalankan operasi database yang diperlukan. Pemisahan ini membuat kode lebih terorganisir. Logika bisnis tidak perlu memuat detail query SQL, dan DAO tidak perlu mengatur tampilan menu atau berinteraksi langsung dengan pengguna. Dengan pola seperti ini, akses database bisa dikelola dengan lebih terstruktur dan konsisten.
+
+### 6. Alur Penerapan JDBC pada Program
+Secara keseluruhan, penerapan JDBC pada Sistem Pengelolaan Food Redistribution dilakukan lewat tahapan-tahapan berikut:
+
+1. **Menyiapkan database dan tabel**. Database MySQL dibuat beserta tabel-tabel yang dibutuhkan untuk menyimpan data sistem.
+2. **Memasang driver JDBC**. MySQL Connector/J ditambahkan sebagai dependensi di `pom.xml` agar Java dapat berkomunikasi dengan MySQL.
+3. **Mengonfigurasi koneksi**. Class `Koneksi` menyediakan metode untuk mendapatkan objek `Connection` menggunakan URL, username, dan password database.
+4. **Menguji koneksi**. Class TesKoneksi digunakan untuk memastikan koneksi berhasil sebelum program dijalankan sepenuhnya.
+5. **Menjalankan operasi lewat DAO**. DAO menjalankan query SQL menggunakan `PreparedStatement` dan memetakan hasil dari database ke objek model.
+6. **Mengelola proses lewat Service**. Service menjalankan proses CRUD, validasi, dan aturan bisnis sebelum atau setelah operasi database, sesuai kebutuhan.
+7. **Menampilkan hasil melalui View**. Hasil operasi dan informasi untuk pengguna ditampilkan melalui class di package `view`.
+
+Dengan cara ini, program tidak lagi bergantung pada penyimpanan sementara, seperti `ArrayList`, untuk data utama. Data saat ini dikelola melalui database MySQL, dan JDBC menjadi penghubung antara aplikasi Java dan database. Penggunaan DAO juga membantu memisahkan tanggung jawab antara akses data, logika bisnis, dan tampilan program.
+
+---
 ## ✅ Validasi Input
 Untuk mencegah kesalahan saat pengguna memasukkan data, program melakukan validasi input dengan `InputUtil` dan juga validasi tambahan di bagian service dan model. Jika ada input yang tidak sesuai, program akan menampilkan pesan kesalahan dan meminta pengguna untuk mengisi ulang data.
 
