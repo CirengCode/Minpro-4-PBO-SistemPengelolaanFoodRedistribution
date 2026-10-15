@@ -24,6 +24,20 @@ public class Donasi {
             this.jumlahPorsi = jumlahPorsi;
             this.statusKelayakan = statusKelayakan;
     }
+    
+    public Donasi(
+            String idDonasi,
+            String idDonatur,
+            String namaMakanan,
+            int jumlahPorsi,
+            String statusKelayakan) {
+
+        this.idDonasi = idDonasi;
+        this.idDonatur = idDonatur;
+        this.namaMakanan = namaMakanan;
+        this.jumlahPorsi = jumlahPorsi;
+        this.statusKelayakan = statusKelayakan;
+    }
 
     public String getIdDonasi() {
         return idDonasi;

@@ -3,29 +3,40 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package view;
-import java.util.ArrayList;
+import java.util.List;
 import model.Donatur;
 import model.DonaturIndividu;
 import model.DonaturInstansi;
 
 public class DonaturView {
-    public void tableData(ArrayList<Donatur> dataDonatur) {
+    public void tableData(List<Donatur> dataDonatur) {
         System.out.println("------------------------------------");
         System.out.println("============= DONATUR ==============");
         System.out.println("------------------------------------");
 
-        for (Donatur d : dataDonatur) {
-            System.out.println("ID Donatur: " + d.getIdDonatur());
-            System.out.println("Nama Donatur: " + d.getNamaDonatur());
-            System.out.println("Jenis Donatur: " + d.getJenisDonatur());
+        if (dataDonatur.isEmpty()) {
+            System.out.println("Belum ada data donatur.");
+        } else {
+            for (Donatur d : dataDonatur) {
+                System.out.println("ID Donatur: " + d.getIdDonatur());
+                System.out.println("Nama Donatur: " + d.getNamaDonatur());
+                System.out.println("Jenis Donatur: " + d.getJenisDonatur());
 
-            if (d instanceof DonaturIndividu individu) {
-                System.out.println("Jenis Kegiatan: " + individu.getJenisKegiatan());
-            } else if (d instanceof DonaturInstansi instansi) {
-                System.out.println("Nama Instansi: " + instansi.getNamaInstansi());
-                System.out.println("Jenis Instansi: " + instansi.getJenisInstansi());
+                if (d instanceof DonaturIndividu individu) {
+                    System.out.println(
+                        "Jenis Kegiatan: " + individu.getJenisKegiatan()
+                    );
+                } else if (d instanceof DonaturInstansi instansi) {
+                    System.out.println(
+                        "Nama Instansi: " + instansi.getNamaInstansi()
+                    );
+                    System.out.println(
+                        "Jenis Instansi: " + instansi.getJenisInstansi()
+                    );
+                }
+
+                System.out.println("------------------------------------");
             }
-            System.out.println("------------------------------------");
         }
     }
     
@@ -50,16 +61,21 @@ public class DonaturView {
         System.out.println("Jenis Donatur: " + donatur.getJenisDonatur());
 
         if (donatur instanceof DonaturIndividu individu) {
-            System.out.println("Jenis Kegiatan: " + individu.getJenisKegiatan());
-
+            System.out.println(
+                "Jenis Kegiatan: " + individu.getJenisKegiatan()
+            );
         } else if (donatur instanceof DonaturInstansi instansi) {
-            System.out.println("Nama Instansi: " + instansi.getNamaInstansi());
-            System.out.println("Jenis Instansi: " + instansi.getJenisInstansi());
+            System.out.println(
+                "Nama Instansi: " + instansi.getNamaInstansi()
+            );
+            System.out.println(
+                "Jenis Instansi: " + instansi.getJenisInstansi()
+            );
         }
 
         System.out.println("------------------------------------");
     }
-    
+
     public void tampilkanDataHapus(Donatur donatur) {
         System.out.println("------------------------------------");
         System.out.println("Data yang akan dihapus:");
@@ -68,11 +84,16 @@ public class DonaturView {
         System.out.println("Jenis Donatur: " + donatur.getJenisDonatur());
 
         if (donatur instanceof DonaturIndividu individu) {
-            System.out.println("Jenis Kegiatan: " + individu.getJenisKegiatan());
-
+            System.out.println(
+                "Jenis Kegiatan: " + individu.getJenisKegiatan()
+            );
         } else if (donatur instanceof DonaturInstansi instansi) {
-            System.out.println("Nama Instansi: " + instansi.getNamaInstansi());
-            System.out.println("Jenis Instansi: " + instansi.getJenisInstansi());
+            System.out.println(
+                "Nama Instansi: " + instansi.getNamaInstansi()
+            );
+            System.out.println(
+                "Jenis Instansi: " + instansi.getJenisInstansi()
+            );
         }
 
         System.out.println("------------------------------------");
@@ -90,4 +111,5 @@ public class DonaturView {
         System.out.println("     Silakan masukkan ID yang valid     ");
         System.out.println("----------------------------------------");
     }
+    
 }

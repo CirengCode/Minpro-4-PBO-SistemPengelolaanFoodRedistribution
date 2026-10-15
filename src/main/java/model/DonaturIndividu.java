@@ -6,9 +6,19 @@ package model;
 
 public class DonaturIndividu extends Donatur {
     private String jenisKegiatan;
-
-    public DonaturIndividu(String namaDonatur, String jenisKegiatan) {
+    
+    public DonaturIndividu(
+            String namaDonatur,
+            String jenisKegiatan) {
         super(namaDonatur);
+        this.jenisKegiatan = jenisKegiatan;
+    }
+
+    public DonaturIndividu(
+            String idDonatur,
+            String namaDonatur,
+            String jenisKegiatan) {
+        super(idDonatur, namaDonatur);
         this.jenisKegiatan = jenisKegiatan;
     }
 

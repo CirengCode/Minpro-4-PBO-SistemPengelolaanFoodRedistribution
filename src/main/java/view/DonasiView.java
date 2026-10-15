@@ -3,14 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package view;
-import java.util.ArrayList;
+import java.util.List;
 import model.Donasi;
 
 public class DonasiView {
-    public void tableData(ArrayList<Donasi> dataDonasi) {
+    public void tableData(List<Donasi> dataDonasi) {
         System.out.println("------------------------------------");
         System.out.println("============= DONASI ===============");
         System.out.println("------------------------------------");
+
+        if (dataDonasi.isEmpty()) {
+            System.out.println("Belum ada data donasi.");
+            System.out.println("------------------------------------");
+            return;
+        }
 
         for (Donasi d : dataDonasi) {
             System.out.println("ID Donasi: " + d.getIdDonasi());
@@ -18,10 +24,12 @@ public class DonasiView {
             System.out.println("Nama Makanan: " + d.getNamaMakanan());
             System.out.println("Jumlah Porsi: " + d.getJumlahPorsi());
             System.out.println("Status Kelayakan: " + d.getStatusKelayakan());
+
             if (d.getStatusKelayakan().equalsIgnoreCase("Tidak Layak")) {
                 System.out.println("------------------------------------");
                 System.out.println("    !!! TIDAK AKAN DISALURKAN !!!    ");
             }
+
             System.out.println("------------------------------------");
         }
     }

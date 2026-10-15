@@ -12,8 +12,17 @@ public class DonaturInstansi extends Donatur {
             String namaDonatur,
             String namaInstansi,
             String jenisInstansi) {
-
         super(namaDonatur);
+        this.namaInstansi = namaInstansi;
+        this.jenisInstansi = jenisInstansi;
+    }
+
+    public DonaturInstansi(
+            String idDonatur,
+            String namaDonatur,
+            String namaInstansi,
+            String jenisInstansi) {
+        super(idDonatur, namaDonatur);
         this.namaInstansi = namaInstansi;
         this.jenisInstansi = jenisInstansi;
     }

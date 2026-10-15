@@ -8,12 +8,16 @@ import util.IdGenerator;
 public abstract class Donatur {
     private final String idDonatur;
     private String namaDonatur;
-
+    
     public Donatur(String namaDonatur) {
-        this.idDonatur = IdGenerator.generateId("DT0");
-        this.namaDonatur = namaDonatur;
+        this(IdGenerator.generateId("DT0"), namaDonatur);
     }
 
+    public Donatur(String idDonatur, String namaDonatur) {
+        this.idDonatur = idDonatur;
+        this.namaDonatur = namaDonatur;
+    }
+    
     public String getIdDonatur() {
         return idDonatur;
     }

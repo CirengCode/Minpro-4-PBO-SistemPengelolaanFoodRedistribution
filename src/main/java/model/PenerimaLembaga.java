@@ -19,6 +19,18 @@ public class PenerimaLembaga extends Penerima {
         this.jenisLembaga = jenisLembaga;
         this.namaPengelola = namaPengelola;
     }
+    
+    public PenerimaLembaga(
+            String idPenerima,
+            String namaLembaga,
+            String jenisLembaga,
+            String namaPengelola) {
+        
+        super(idPenerima);
+        this.namaLembaga = namaLembaga;
+        this.jenisLembaga = jenisLembaga;
+        this.namaPengelola = namaPengelola;
+    }
 
     public String getNamaLembaga() {
         return namaLembaga;

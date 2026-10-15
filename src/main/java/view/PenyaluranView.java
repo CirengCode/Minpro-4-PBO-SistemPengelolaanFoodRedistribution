@@ -3,11 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package view;
-import java.util.ArrayList;
+import java.util.List;
 import model.Penyaluran;
 
 public class PenyaluranView {
-    public void tableData(ArrayList<Penyaluran> dataPenyaluran) {
+    public void tableData(List<Penyaluran> dataPenyaluran) {
         System.out.println("------------------------------------");
         System.out.println("=========== PENYALURAN =============");
         System.out.println("------------------------------------");
@@ -24,6 +24,7 @@ public class PenyaluranView {
             System.out.println("------------------------------------");
         }
     }
+
     
     public void tampilkanMenuPilihan() {
         System.out.println("[1] Tambah");
@@ -85,5 +86,19 @@ public class PenyaluranView {
         System.out.println("     Pilihan Status Penyaluran      ");
         System.out.println("         Tidak Valid -__- !         ");
         System.out.println("------------------------------------");
+    }
+    
+    public void tampilkanStatusTidakLayak() {
+        System.out.println("--------------------------------------");
+        System.out.println(" Donasi Berstatus TIDAK LAYAK -__- !  ");
+        System.out.println("   Silakan pilih Donasi yang LAYAK    ");
+        System.out.println("--------------------------------------");
+    }
+    
+    public void tampilkanPorsiDonasiTidakValid() {
+        System.out.println("------------------------------------------");
+        System.out.println(" Seluruh porsi Donasi telah dialokasikan! ");
+        System.out.println("        Silakan pilih Donasi lain         ");
+        System.out.println("------------------------------------------");
     }
 }

@@ -11,6 +11,10 @@ public abstract class Penerima {
     public Penerima() {
         this.idPenerima = IdGenerator.generateId("PN0");
     }
+    
+    protected Penerima(String idPenerima) {
+        this.idPenerima = idPenerima;
+    }
 
     public String getIdPenerima() {
         return idPenerima;

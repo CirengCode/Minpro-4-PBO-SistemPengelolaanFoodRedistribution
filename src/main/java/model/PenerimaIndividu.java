@@ -11,6 +11,13 @@ public class PenerimaIndividu extends Penerima {
         super();
         this.deskripsiPenerima = deskripsiPenerima;
     }
+    
+    public PenerimaIndividu(
+            String idPenerima,
+            String deskripsiPenerima) {
+        super(idPenerima);
+        this.deskripsiPenerima = deskripsiPenerima;
+    }
 
     public String getDeskripsiPenerima() {
         return deskripsiPenerima;

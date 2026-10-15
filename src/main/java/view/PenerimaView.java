@@ -3,27 +3,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package view;
-import java.util.ArrayList;
+import java.util.List;
 import model.Penerima;
 import model.PenerimaIndividu;
 import model.PenerimaLembaga;
 
 public class PenerimaView {
-    public void tableData(ArrayList<Penerima> dataPenerima) {
+    public void tableData(List<Penerima> dataPenerima) {
         System.out.println("------------------------------------");
         System.out.println("============= PENERIMA =============");
         System.out.println("------------------------------------");
-
+        
         for (Penerima p : dataPenerima) {
             System.out.println("ID Penerima: " + p.getIdPenerima());
             System.out.println("Jenis Penerima: " + p.getJenisPenerima());
 
             if (p instanceof PenerimaIndividu individu) {
-                System.out.println("Deskripsi Penerima: " + individu.getDeskripsiPenerima());
+                System.out.println("Deskripsi Penerima: "
+                    + individu.getDeskripsiPenerima());
             } else if (p instanceof PenerimaLembaga lembaga) {
-                System.out.println("Nama Lembaga: " + lembaga.getNamaLembaga());
-                System.out.println("Jenis Lembaga: " + lembaga.getJenisLembaga());
-                System.out.println("Nama Pengelola: " + lembaga.getNamaPengelola());
+                System.out.println("Nama Lembaga: "
+                    + lembaga.getNamaLembaga());
+                System.out.println("Jenis Lembaga: "
+                    + lembaga.getJenisLembaga());
+                System.out.println("Nama Pengelola: "
+                    + lembaga.getNamaPengelola());
             }
 
             System.out.println("------------------------------------");

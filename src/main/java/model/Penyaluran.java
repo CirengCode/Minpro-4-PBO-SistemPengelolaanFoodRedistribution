@@ -33,6 +33,26 @@ public class Penyaluran {
         this.jumlahPorsi = jumlahPorsi;
         this.petugas = petugas;
     }
+    
+    public Penyaluran(
+            String idPenyaluran,
+            String idDonasi,
+            String idPenerima,
+            String namaKegiatan,
+            String tanggalPenyaluran,
+            String statusPenyaluran,
+            int jumlahPorsi,
+            String petugas) {
+
+        this.idPenyaluran = idPenyaluran;
+        this.idDonasi = idDonasi;
+        this.idPenerima = idPenerima;
+        this.namaKegiatan = namaKegiatan;
+        this.tanggalPenyaluran = tanggalPenyaluran;
+        setStatusPenyaluran(statusPenyaluran);
+        this.jumlahPorsi = jumlahPorsi;
+        this.petugas = petugas;
+    }
 
     public String getIdPenyaluran() {
         return idPenyaluran;
@@ -69,7 +89,7 @@ public class Penyaluran {
     public void setTanggalPenyaluran(String tanggalPenyaluran) {
         this.tanggalPenyaluran = tanggalPenyaluran;
     }
-    
+
     public String getStatusPenyaluran() {
         return statusPenyaluran;
     }
